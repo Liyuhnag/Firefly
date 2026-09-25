@@ -78,12 +78,12 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			titleSize: "4.5rem",
 			// 主页横幅副标题
 			subtitle: [
-				"In Reddened Chrysalis, I Once Rest",
-				"From Shattered Sky, I Free Fall",
-				"Amidst Silenced Stars, I Deep Sleep",
-				"Upon Lighted Fyrefly, I Soon Gaze",
-				"From Undreamt Night, I Thence Shine",
-				"In Finalized Morrow, I Full Bloom",
+				"莫道桑榆晚，为霞尚满天",
+				"时间如白驹过隙，愿你我都能做生活的高手",
+				"人生的道路虽然漫长，但紧要处常常只有几步",
+				"那一天我二十一岁，在我一生的黄金时代",
+				"人是为了活着本身而活着",
+				"生活不能等待别人来安排，要自己去争取和奋斗",
 			],
 			// 主页横幅副标题字体大小
 			subtitleSize: "1.5rem",
