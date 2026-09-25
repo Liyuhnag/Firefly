@@ -39,6 +39,8 @@ jobs:
       
       - name: Build site
         run: pnpm run build
+        env:
+          BASE_PATH: /Firefly/
 
       - name: Create .nojekyll file
         run: touch dist/.nojekyll
