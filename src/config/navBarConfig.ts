@@ -59,6 +59,9 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 			// 动态
 			LinkPresets.Dynamic,
 
+			// 计划
+			LinkPresets.Plan,
+
 			// 项目
 			LinkPresets.Projects,
 
@@ -187,6 +190,12 @@ export const LinkPresets: Record<string, NavBarLink> = {
 		url: "/dynamic/",
 		icon: "material-symbols:forum-rounded",
 		pageKey: "dynamic",
+	},
+	Plan: {
+		name: "计划",
+		url: "/plan/",
+		icon: "material-symbols:calendar-today-rounded",
+		pageKey: "plan",
 	},
 	Projects: {
 		name: "项目",

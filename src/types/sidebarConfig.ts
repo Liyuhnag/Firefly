@@ -10,7 +10,8 @@ export type WidgetComponentType =
 	| "calendar"
 	| "music"
 	| "siteInfo"
-	| "dynamic";
+	| "dynamic"
+	| "plan";
 
 export type WidgetComponentConfig = {
 	type: WidgetComponentType; // 组件类型

@@ -35,6 +35,11 @@ type DynamicData = {
 	location: string;
 };
 
+type PlanData = {
+	date: Date;
+	title: string;
+};
+
 type ProjectLink = {
 	label: string;
 	icon: string;
@@ -90,6 +95,14 @@ const postsCollection: ContentCollection<PostData> = defineCollection({
 	}),
 });
 
+const planCollection: ContentCollection<PlanData> = defineCollection({
+	loader: glob({ pattern: "**/*.md", base: "./src/content/plan" }),
+	schema: z.object({
+		date: z.date(),
+		title: z.string().optional().default(""),
+	}),
+});
+
 const specCollection: ContentCollection<Record<string, never>> =
 	defineCollection({
 		loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/spec" }),
@@ -135,9 +148,11 @@ export const collections: {
 	posts: typeof postsCollection;
 	spec: typeof specCollection;
 	projects: typeof projectsCollection;
+	plan: typeof planCollection;
 } = {
 	dynamic: dynamicCollection,
 	posts: postsCollection,
 	spec: specCollection,
 	projects: projectsCollection,
+	plan: planCollection,
 };

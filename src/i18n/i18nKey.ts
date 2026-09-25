@@ -50,6 +50,15 @@ enum I18nKey {
 	dynamicViewImage = "dynamicViewImage",
 	dynamicSelectImage = "dynamicSelectImage",
 
+	// 计划
+	plan = "plan",
+	planDescription = "planDescription",
+	planEmpty = "planEmpty",
+	planToday = "planToday",
+	morePlan = "morePlan",
+	planProgress = "planProgress",
+	planNoTasks = "planNoTasks",
+
 	// 公告栏
 	announcement = "announcement",
 	announcementClose = "announcementClose",

@@ -1,0 +1,105 @@
+---
+import { getCollection, render } from "astro:content";
+import { Icon } from "astro-icon/components";
+import WidgetLayout from "@/components/common/WidgetLayout.astro";
+import { siteConfig } from "@/config";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import type { WidgetComponentConfig } from "@/types/config";
+import { formatPlanDate, parsePlanProgress } from "@/utils/plan-utils";
+import { url } from "@/utils/url-utils";
+
+interface Props {
+	class?: string;
+	style?: string;
+	widgetConfig?: WidgetComponentConfig;
+}
+
+const { class: className, style, widgetConfig } = Astro.props;
+const showTitle = widgetConfig?.showTitle !== false;
+
+const timezone = siteConfig.timezone || "UTC";
+const todayStr = new Intl.DateTimeFormat("en-CA", {
+	timeZone: timezone,
+	year: "numeric",
+	month: "2-digit",
+	day: "2-digit",
+}).format(new Date());
+
+const plans = siteConfig.pages.plan ? await getCollection("plan") : [];
+const todayEntry = plans.find(
+	(entry) => formatPlanDate(entry.data.date) === todayStr,
+);
+
+const progress = todayEntry
+	? parsePlanProgress(todayEntry.body)
+	: { done: 0, total: 0 };
+const progressText = i18n(I18nKey.planProgress)
+	.replace("{done}", String(progress.done))
+	.replace("{total}", String(progress.total));
+
+const Content = todayEntry ? (await render(todayEntry)).Content : null;
+---
+
+{
+	siteConfig.pages.plan && (
+		<WidgetLayout
+			name={i18n(I18nKey.planToday)}
+			showTitle={showTitle}
+			id="plan-today"
+			class={className}
+			style={style}
+		>
+			{todayEntry ? (
+				<div class="flex flex-col gap-2">
+					<div class="flex items-center justify-between text-sm">
+						<span class="font-bold text-neutral-900 dark:text-neutral-100">
+							{todayEntry.data.title || todayStr}
+						</span>
+						{progress.total > 0 && (
+							<span class="text-xs text-(--primary) font-medium">
+								{progressText}
+							</span>
+						)}
+					</div>
+					<div class="custom-md text-sm plan-today-content">
+						{Content && <Content />}
+					</div>
+				</div>
+			) : (
+				<div class="flex flex-col items-center gap-1 py-4 text-sm text-neutral-500 dark:text-neutral-400">
+					<Icon name="material-symbols:calendar-today-rounded" class="text-2xl opacity-60" />
+					<span>{i18n(I18nKey.planEmpty)}</span>
+				</div>
+			)}
+			<a
+				class="btn-plain mt-2 flex items-center justify-center gap-1 rounded-lg p-1.5
+					text-sm text-(--primary)"
+				href={url("/plan/")}
+			>
+				<Icon
+					name="material-symbols:calendar-month-rounded"
+					class="size-4.5"
+					aria-hidden="true"
+				/>
+				<span>{i18n(I18nKey.morePlan)}</span>
+			</a>
+		</WidgetLayout>
+	)
+}
+
+<style>
+	.plan-today-content :global(ul.contains-task-list) {
+		list-style: none;
+		padding-left: 0;
+		margin: 0;
+	}
+	.plan-today-content :global(li.task-list-item) {
+		display: flex;
+		align-items: flex-start;
+		gap: 0.375rem;
+	}
+	.plan-today-content :global(li.task-list-item input[type="checkbox"]) {
+		margin-top: 0.2rem;
+	}
+</style>

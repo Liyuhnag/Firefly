@@ -1,0 +1,115 @@
+---
+import { getCollection, render } from "astro:content";
+import { Icon } from "astro-icon/components";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import "@/styles/pages/common.css";
+import { siteConfig } from "@/config";
+import {
+	formatPlanDate,
+	parsePlanProgress,
+	sortPlans,
+} from "@/utils/plan-utils";
+
+if (!siteConfig.pages.plan) {
+	return Astro.redirect("/404/");
+}
+
+const title = i18n(I18nKey.plan);
+const description = i18n(I18nKey.planDescription);
+
+const rawPlans = sortPlans(await getCollection("plan"));
+
+const rendered = await Promise.all(
+	rawPlans.map(async (entry) => ({
+		entry,
+		Content: (await render(entry)).Content,
+		progress: parsePlanProgress(entry.body),
+	})),
+);
+
+// 按年份分组，年份倒序；组内按日期倒序（已由 sortPlans 处理）
+const grouped = new Map<number, typeof rendered>();
+for (const item of rendered) {
+	const year = item.entry.data.date.getFullYear();
+	if (!grouped.has(year)) grouped.set(year, []);
+	grouped.get(year)?.push(item);
+}
+const groups = Array.from(grouped.entries())
+	.map(([year, items]) => ({ year, items }))
+	.sort((a, b) => b.year - a.year);
+
+const progressText = (done: number, total: number) =>
+	i18n(I18nKey.planProgress)
+		.replace("{done}", String(done))
+		.replace("{total}", String(total));
+---
+
+<MainGridLayout {title} {description}>
+	<section class="page-shell" aria-labelledby="plan-page-title">
+		<div>
+			<header class="page-header card-base">
+				<div class="page-heading">
+					<div class="page-icon" aria-hidden="true">
+						<Icon name="material-symbols:calendar-today-rounded" />
+					</div>
+					<div>
+						<h2 id="plan-page-title">{title}</h2>
+						{description && <p>{description}</p>}
+					</div>
+				</div>
+				<div class="page-count" aria-label={title}>
+					<Icon name="material-symbols:event-note-rounded" />
+					<strong>{rawPlans.length}</strong>
+					<span>{title}</span>
+				</div>
+			</header>
+
+			{groups.map((group) => (
+				<div class="plan-year-block card-base px-8 py-6 mb-4">
+					<div class="plan-year-title text-2xl font-bold text-(--primary) mb-4">
+						{group.year}
+					</div>
+					<div class="flex flex-col gap-4">
+						{group.items.map(({ entry, Content, progress }) => (
+							<article class="plan-entry card-base p-5">
+								<header class="flex items-center justify-between mb-2">
+									<h3 class="text-lg font-bold text-90">
+										{entry.data.title || formatPlanDate(entry.data.date)}
+									</h3>
+									<div class="flex items-center gap-3 shrink-0">
+										{progress.total > 0 && (
+											<span class="text-sm text-(--primary) font-medium">
+												{progressText(progress.done, progress.total)}
+											</span>
+										)}
+										<time
+											class="text-sm text-30"
+											datetime={entry.data.date.toISOString()}
+										>
+											{formatPlanDate(entry.data.date)}
+										</time>
+									</div>
+								</header>
+								<div class="custom-md plan-entry-content">
+									<Content />
+								</div>
+							</article>
+						))}
+					</div>
+				</div>
+			))}
+
+			{rawPlans.length === 0 && (
+				<div class="card-base px-8 py-12 text-center">
+					<Icon
+						name="material-symbols:calendar-today-rounded"
+						class="text-5xl text-30 mx-auto mb-4"
+					/>
+					<p class="text-30">{i18n(I18nKey.planEmpty)}</p>
+				</div>
+			)}
+		</div>
+	</section>
+</MainGridLayout>
