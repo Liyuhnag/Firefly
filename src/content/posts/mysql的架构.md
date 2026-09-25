@@ -10,8 +10,6 @@ draft: false
 lang: ""
 slug: mysql-de-jia-gou
 ---
-![MySQL 基础架构](./images/mysql-architecture-cover.png)
-
 # MySQL 基础架构：一条 SQL 语句是如何执行的
 
 很多人用 MySQL 很久了，却说不清楚一条查询语句从发出到返回结果，中间到底经历了什么。为什么改了用户权限当前连接没生效？为什么慢查询日志里的 `rows_examined` 和实际扫描行数对不上？这些问题的答案，都藏在 MySQL 的基础架构里。
