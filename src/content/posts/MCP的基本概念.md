@@ -27,7 +27,7 @@ MCP，全称是 **Model Context Protocol（模型上下文协议）**。它由 A
 
 下面这张图来自 MCP 官网的架构图，可以直观地感受到 MCP 协议的"枢纽"作用：中间的 MCP 协议层作为统一标准，连接了左侧的智能体客户端（如 Claude、IDE）和右侧的工具（如数据库、文件系统等）。它把原本没有复用性的点对点连接，简化为统一的接口调用——只要支持 MCP 标准，左侧任意客户端应用都能**"即插即用"**地连接右侧任意工具，真正实现了智能体和工具的**功能解耦**。
 
-![MCP 架构图](https://cdn.nlark.com/yuque/0/2025/png/38485174/1763635658444-3baefe54-4877-4795-be20-0ea3ee9dadbe.png)
+![MCP 架构图](./images/mcp-arch-diagram.png)
 
 ## MCP 和 Function Call 有什么区别？
 
@@ -41,13 +41,13 @@ MCP，全称是 **Model Context Protocol（模型上下文协议）**。它由 A
 
 MCP 通过清晰的 **Client–Server 分层架构**解决了传统 Function Call "强耦合、难扩展、难管理"的问题。工具不再需要嵌入到智能体内部，而是以独立的 MCP Server 暴露能力；Client 负责通过 JSON-RPC 与 Server 进行能力协商与通信；智能体则统一管理权限、上下文整合与大模型的调用。这样一来，工具接入不再需要在智能体中硬编码逻辑，功能边界更清晰，智能体也能通过工具的组合与复用轻松扩展。
 
-![Function Call 与 MCP 架构对比](https://cdn.nlark.com/yuque/0/2025/png/38485174/1763640990562-747aad49-d449-49c2-9058-c6a802c4bcaa.png)
+![Function Call 与 MCP 架构对比](./images/mcp-vs-functioncall.png)
 
 通俗来讲，Function Call 是**"智能体直接带着自制的工具去工作"**，而 MCP 则通过一套标准的协议与架构，把工具变成独立服务，由智能体统一调度——就像**"在工具商店，挑选专业制造商制造的工具去工作"**。智能体只需通过协议查询和调用，无需了解工具的内部实现即可直接使用，从而真正实现了工具的模块化、标准化和可插拔化。
 
 ## MCP 的工作流程
 
-![MCP 工作流程图](https://cdn.nlark.com/yuque/0/2025/jpeg/38485174/1763640703827-2cbd6287-0a09-4ef5-becd-17f55035d5f9.jpeg)
+![MCP 工作流程图](./images/mcp-workflow.jpeg)
 
 **第一阶段：初始化（工具说明获取）** 智能体初始化时，会通过 MCP 协议向所有连接的 MCP Server 使用 **JSON-RPC** 协议请求工具说明书。MCP Server 负责提供并确保这些说明书是**标准化的 JSON 格式**。
 
