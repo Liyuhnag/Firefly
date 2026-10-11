@@ -29,5 +29,12 @@
   "src:content/posts/images/mcp-vs-functioncall.png": "f9f9e4f5f4e9f4f5ea",
   "src:content/posts/images/mcp-basic-cover.png": "062d3607313a04242f",
   "src:content/posts/images/mcp-arch-diagram.png": "f4f5f7f4f5f7f3f5f6",
-  "src:content/posts/images/intent-recognition-cover.png": "5047476267744a3f57"
+  "src:content/posts/images/intent-recognition-cover.png": "5047476267744a3f57",
+  "src:content/posts/images/interrupt-cover.png": "e7d9c6d8cbb8d7cab3",
+  "src:content/posts/images/context-window-workset.png": "f3f5f9f1f4f8eff1f5",
+  "src:content/posts/images/context-sliding-window-variant.png": "f4f4f0e5f0ebdeebe1",
+  "src:content/posts/images/context-memory-layers.png": "f0f4f8f3f6fbf1f5fa",
+  "src:content/posts/images/context-layered-architecture.png": "eff2f7eff2f7e8edf5",
+  "src:content/posts/images/context-enginer-cover.png": "c4b59cf0e6d3d4c8b3",
+  "src:content/posts/images/context-context-sources.png": "f1f4f8f2f5f9f0f3f7"
 }
