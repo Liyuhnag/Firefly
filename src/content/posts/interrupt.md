@@ -2,7 +2,7 @@
 title: interrupt
 published: 2026-10-11
 description: 让 Agent 在执行危险操作前停下来等人确认，听起来只是一个 interrupt 调用。但挂起几小时、服务重启后还要能接着跑，就要求中断、持久化、恢复是一条完整链路。本文记录我们在 LangGraph 上选型与三轮实现方案的取舍过程。
-image: ./images/interrupt-cover.png
+image: ./images/interrupt.png
 tags:
   - 智能体开发
   - LangGraph
