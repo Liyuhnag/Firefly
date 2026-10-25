@@ -44,5 +44,10 @@
   "src:content/posts/images/harness-engineering-subsystems.png": "c9d9cdd9e1daedf3f3",
   "src:content/posts/images/harness-engineering-shell.png": "dedbdcdde2d7ebefed",
   "src:content/posts/images/harness-engineering-loop-gaps.png": "ede4e4ede6e1f3ede9",
-  "src:content/posts/images/harness-engineering-cover.png": "dbd7d7dce0d5eff3f1"
+  "src:content/posts/images/harness-engineering-cover.png": "dbd7d7dce0d5eff3f1",
+  "src:content/posts/images/container-vs-vm.png": "ddded7e6e6e2e7eff5",
+  "src:content/posts/images/container-rootfs-layers.png": "e6e6e7dce5e3eef5f8",
+  "src:content/posts/images/container-pid-namespace.png": "e1dfdde5e4d9e8f0f5",
+  "src:content/posts/images/container-cover.png": "dfdee0dee4d9e7f2f9",
+  "src:content/posts/images/container-cover-2.png": "dbdadbdee3dae8f0f7"
 }
