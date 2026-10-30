@@ -49,5 +49,8 @@
   "src:content/posts/images/container-rootfs-layers.png": "e6e6e7dce5e3eef5f8",
   "src:content/posts/images/container-pid-namespace.png": "e1dfdde5e4d9e8f0f5",
   "src:content/posts/images/container-cover.png": "dfdee0dee4d9e7f2f9",
-  "src:content/posts/images/container-cover-2.png": "dbdadbdee3dae8f0f7"
+  "src:content/posts/images/container-cover-2.png": "dbdadbdee3dae8f0f7",
+  "src:content/posts/images/pod-infra-architecture.png": "fbfdfefdfeffd4d8db",
+  "src:content/posts/images/pod-gang-scheduling.png": "eef3f9e9f7f3f1f9f7",
+  "src:content/posts/images/pod-cover.png": "1a233211283d0e1e31"
 }
