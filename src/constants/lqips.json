@@ -52,5 +52,9 @@
   "src:content/posts/images/container-cover-2.png": "dbdadbdee3dae8f0f7",
   "src:content/posts/images/pod-infra-architecture.png": "fbfdfefdfeffd4d8db",
   "src:content/posts/images/pod-gang-scheduling.png": "eef3f9e9f7f3f1f9f7",
-  "src:content/posts/images/pod-cover.png": "1a233211283d0e1e31"
+  "src:content/posts/images/pod-cover.png": "1a233211283d0e1e31",
+  "src:content/posts/images/mysql-index-troubleshooting.png": "b3c5c7bcbcb2c5b494",
+  "src:content/posts/images/mysql-index-sampling.png": "bfc2c1c0c2bfdad0b5",
+  "src:content/posts/images/mysql-index-order-limit.png": "b9d0d5bbc9c9c9c3a4",
+  "src:content/posts/images/mysql-index-cost-model.png": "bfc5c6b4c0bfc5bea0"
 }
