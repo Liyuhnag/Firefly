@@ -38,7 +38,10 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Astro Check
-        run: pnpm astro check
+        run: pnpm check
+
+      - name: Run TypeScript Check
+        run: pnpm type-check
 
   build:
     strategy:
@@ -63,5 +66,7 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run Astro Build
-        run: pnpm astro build
+      - name: Build site
+        run: pnpm build
+        env:
+          BASE_PATH: /Firefly/
