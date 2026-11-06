@@ -56,5 +56,7 @@
   "src:content/posts/images/mysql-index-troubleshooting.png": "b3c5c7bcbcb2c5b494",
   "src:content/posts/images/mysql-index-sampling.png": "bfc2c1c0c2bfdad0b5",
   "src:content/posts/images/mysql-index-order-limit.png": "b9d0d5bbc9c9c9c3a4",
-  "src:content/posts/images/mysql-index-cost-model.png": "bfc5c6b4c0bfc5bea0"
+  "src:content/posts/images/mysql-index-cost-model.png": "bfc5c6b4c0bfc5bea0",
+  "src:content/posts/images/pod-sharing-handdrawn.png": "bdc1c0b4bcbcbac3b1",
+  "src:content/posts/images/pod-scheduling-handdrawn.png": "bcbfbebdbab0cfc6a5"
 }
