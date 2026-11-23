@@ -195,13 +195,20 @@ const categories = [...new Set(documents.map((doc) => doc.category))];
         <h2 class="mb-2 text-xl font-bold">项目文档</h2>
         {documents.length ? (
           <project-document-timeline class="block">
-            <label class="mb-5 inline-flex items-center gap-2 text-sm">
-              文档分类
-              <select class="rounded-lg border border-(--line-divider) bg-(--card-bg) px-3 py-1.5">
-                <option value="">全部分类</option>
-                {categories.map((category) => <option value={category}>{category}</option>)}
-              </select>
-            </label>
+            <fieldset class="mb-5 min-w-0 border-b border-(--line-divider) pb-3">
+              <legend class="sr-only">文档分类</legend>
+              <div class="flex flex-wrap gap-1">
+                {["", ...categories].map((category) => (
+                  <label class="relative inline-flex min-w-0 max-w-full cursor-pointer">
+                    <input class="peer sr-only" type="radio" name="document-category" value={category} checked={!category} />
+                    <span class="flex min-h-10 items-center gap-2 rounded-lg px-3 text-sm text-75 hover:bg-(--primary)/5 peer-checked:bg-(--primary)/10 peer-checked:font-semibold peer-focus-visible:outline-2 peer-focus-visible:outline-(--primary)">
+                      <span class="break-all">{category || "全部"}</span>
+                      <span class="text-xs font-normal tabular-nums text-50">{category ? documents.filter((doc) => doc.category === category).length : documents.length}</span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </fieldset>
             <ol class="ml-2 border-l-2 border-(--line-divider)">
               {documents.map((doc) => (
                 <li data-category={doc.category} class="relative pl-5 pb-5 last:pb-0">
@@ -221,14 +228,13 @@ const categories = [...new Set(documents.map((doc) => doc.category))];
 <script>
   class ProjectDocumentTimeline extends HTMLElement {
     connectedCallback() {
-      const select = this.querySelector("select");
-      if (!select) return;
       const filter = () => {
-        for (const item of this.querySelectorAll<HTMLElement>("[data-category]")) {
-          item.hidden = Boolean(select.value) && item.dataset.category !== select.value;
+        const category = this.querySelector<HTMLInputElement>("input:checked")?.value;
+        for (const item of this.querySelectorAll<HTMLElement>("li[data-category]")) {
+          item.hidden = Boolean(category) && item.dataset.category !== category;
         }
       };
-      select.onchange = filter;
+      this.onchange = filter;
       filter();
     }
   }
