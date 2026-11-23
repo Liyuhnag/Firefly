@@ -7,7 +7,7 @@ import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
-import { getSortedProjects } from "@/utils/content-utils";
+import { getSortedPostsList, getSortedProjects } from "@/utils/content-utils";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import {
 	getProjectStatusMeta,
@@ -17,6 +17,7 @@ import {
 } from "@/utils/projects-utils";
 import {
 	getFileDirFromPath,
+	getPostUrlBySlug,
 	removeFileExtension,
 	url,
 } from "@/utils/url-utils";
@@ -37,7 +38,7 @@ export async function getStaticPaths() {
 const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
 
-const { title, description, published, tags, link, status } = entry.data;
+const { title, description, published, techStack, link, status } = entry.data;
 
 // OG 元数据用绝对 URL；页面内封面由 <CoverImage> 用原始 src + basePath 解析（同文章页）
 const coverOg = await resolveProjectImageAbsolute(
@@ -55,8 +56,9 @@ const coverBasePath = getFileDirFromPath(entry.filePath || "");
 // 状态元数据（标准 key → 本地化 + 配色）
 const statusMeta = status ? getProjectStatusMeta(status) : null;
 
-// 标签：详情页完整显示所有标签（不折叠成 +N）
-const visibleTags = tags || [];
+const documents = (await getSortedPostsList()).filter(
+	(post) => post.data.project?.id === entry.id,
+);
 ---
 
 <MainGridLayout
@@ -79,7 +81,7 @@ const visibleTags = tags || [];
       </a>
 
       <!-- 项目头部：封面在上，信息在下（单栏） -->
-      <div class="mb-6">
+      <div class="mb-6" data-pagefind-body>
         <!-- 状态（名称前）+ 名称 -->
         <div class="flex items-center gap-3 flex-wrap">
           <div
@@ -107,30 +109,17 @@ const visibleTags = tags || [];
               {formatDateToYYYYMMDD(published)}
             </time>
           </div>
-          {visibleTags.length > 0 && (
-            <div class="flex items-center">
-              <div class="meta-icon">
-                <Icon name="material-symbols:tag-rounded" class="text-xl" />
-              </div>
-              <span class="flex flex-wrap items-center">
-                {visibleTags.map((tag, i) => (
-                  <span class="flex items-center">
-                    {i !== 0 && (
-                      <span class="mx-1.5 text-sm font-medium text-(--meta-divider)">/</span>
-                    )}
-                    <span class="text-50 text-sm font-medium whitespace-nowrap">{tag}</span>
-                  </span>
-                ))}
-              </span>
-            </div>
-          )}
+
         </div>
 
+        <h2 class="mt-6 text-xl font-bold">项目简介</h2>
         {description && (
-          <p class="mt-2 text-neutral-600 dark:text-neutral-400 leading-relaxed line-clamp-4">
+          <p class="mt-2 text-neutral-600 dark:text-neutral-400 leading-relaxed">
             {description}
           </p>
         )}
+
+        <Markdown class="markdown-content"><Content /></Markdown>
 
         <!-- 外链按钮-->
         {link.length > 0 && (
@@ -192,12 +181,22 @@ const visibleTags = tags || [];
         )}
       </div>
 
-      <!-- README 正文 -->
-      <div data-pagefind-body>
-        <Markdown class="mb-6 markdown-content">
-          <Content />
-        </Markdown>
-      </div>
+      <section class="mb-6">
+        <h2 class="mb-2 text-xl font-bold">技术栈</h2>
+        {techStack.length ? (
+          <ul class="flex flex-wrap gap-2">
+            {techStack.map((tech) => <li class="rounded-lg bg-(--primary)/10 px-3 py-1">{tech}</li>)}
+          </ul>
+        ) : <p class="text-50">暂未填写技术栈</p>}
+      </section>
+      <section class="mb-6">
+        <h2 class="mb-2 text-xl font-bold">项目文档</h2>
+        {documents.length ? (
+          <ul class="space-y-2">
+            {documents.map((post) => <li><a class="text-(--primary) hover:underline" href={getPostUrlBySlug(post.id)}>{post.data.title}</a></li>)}
+          </ul>
+        ) : <p class="text-50">暂无项目文档</p>}
+      </section>
     </div>
   </div>
 </MainGridLayout>

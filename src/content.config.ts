@@ -1,4 +1,4 @@
-import { defineCollection } from "astro:content";
+import { defineCollection, reference } from "astro:content";
 import type { CollectionConfig } from "astro/content/config";
 import { glob } from "astro/loaders";
 import { type ZodType, z } from "astro/zod";
@@ -12,6 +12,7 @@ type PostData = {
 	image: string;
 	tags: string[];
 	category: string | null;
+	project?: { collection: "projects"; id: string };
 	lang: string;
 	pinned: boolean;
 	author: string;
@@ -54,6 +55,7 @@ type ProjectData = {
 	description: string;
 	image: string;
 	tags: string[];
+	techStack: string[];
 	link: ProjectLink[];
 	status: string;
 	lang: string;
@@ -74,6 +76,7 @@ const postsCollection: ContentCollection<PostData> = defineCollection({
 		description: z.string().optional().default(""),
 		image: z.string().optional().default(""),
 		tags: z.array(z.string()).optional().default([]),
+		project: reference("projects").optional(),
 		category: z.string().optional().nullable().default(""),
 		lang: z.string().optional().default(""),
 		pinned: z.boolean().optional().default(false),
@@ -128,6 +131,7 @@ const projectsCollection: ContentCollection<ProjectData> = defineCollection({
 		description: z.string().optional().default(""),
 		image: z.string().optional().default(""),
 		tags: z.array(z.string()).optional().default([]),
+		techStack: z.array(z.string()).default([]),
 		link: z
 			.array(
 				z.object({
