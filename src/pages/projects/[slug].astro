@@ -1,6 +1,4 @@
 ---
-import { render } from "astro:content";
-import Markdown from "@components/common/Markdown.astro";
 import { Icon } from "astro-icon/components";
 import CoverImage from "@/components/common/CoverImage.astro";
 import { siteConfig } from "@/config";
@@ -36,7 +34,6 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const { Content, headings } = await render(entry);
 
 const { title, description, published, techStack, link, status } = entry.data;
 
@@ -56,9 +53,16 @@ const coverBasePath = getFileDirFromPath(entry.filePath || "");
 // 状态元数据（标准 key → 本地化 + 配色）
 const statusMeta = status ? getProjectStatusMeta(status) : null;
 
-const documents = (await getSortedPostsList()).filter(
-	(post) => post.data.project?.id === entry.id,
-);
+const documents = (await getSortedPostsList())
+	.filter((post) => post.data.project?.id === entry.id)
+	.sort((a, b) => b.data.published.getTime() - a.data.published.getTime())
+	.map(({ id, data }) => ({
+		href: getPostUrlBySlug(id),
+		title: data.title,
+		date: formatDateToYYYYMMDD(data.published),
+		category: data.category?.trim() || i18n(I18nKey.uncategorized),
+	}));
+const categories = [...new Set(documents.map((doc) => doc.category))];
 ---
 
 <MainGridLayout
@@ -66,7 +70,6 @@ const documents = (await getSortedPostsList()).filter(
   description={description || title}
   lang={entry.data.lang || undefined}
   setOGTypeArticle={true}
-  headings={headings}
   postCoverImage={coverOg}
 >
   <div class="flex w-full rounded-(--radius-large) overflow-hidden relative mb-4">
@@ -119,7 +122,6 @@ const documents = (await getSortedPostsList()).filter(
           </p>
         )}
 
-        <Markdown class="markdown-content"><Content /></Markdown>
 
         <!-- 外链按钮-->
         {link.length > 0 && (
@@ -192,11 +194,45 @@ const documents = (await getSortedPostsList()).filter(
       <section class="mb-6">
         <h2 class="mb-2 text-xl font-bold">项目文档</h2>
         {documents.length ? (
-          <ul class="space-y-2">
-            {documents.map((post) => <li><a class="text-(--primary) hover:underline" href={getPostUrlBySlug(post.id)}>{post.data.title}</a></li>)}
-          </ul>
+          <project-document-timeline class="block">
+            <label class="mb-5 inline-flex items-center gap-2 text-sm">
+              文档分类
+              <select class="rounded-lg border border-(--line-divider) bg-(--card-bg) px-3 py-1.5">
+                <option value="">全部分类</option>
+                {categories.map((category) => <option value={category}>{category}</option>)}
+              </select>
+            </label>
+            <ol class="ml-2 border-l-2 border-(--line-divider)">
+              {documents.map((doc) => (
+                <li data-category={doc.category} class="relative pl-5 pb-5 last:pb-0">
+                  <span aria-hidden="true" class="absolute -left-[5px] top-2 size-2 rounded-full bg-(--primary)" />
+                  <div class="text-sm text-50"><time datetime={doc.date}>{doc.date}</time> · {doc.category}</div>
+                  <a class="text-(--primary) hover:underline" href={doc.href}>{doc.title}</a>
+                </li>
+              ))}
+            </ol>
+          </project-document-timeline>
         ) : <p class="text-50">暂无项目文档</p>}
       </section>
     </div>
   </div>
 </MainGridLayout>
+
+<script>
+  class ProjectDocumentTimeline extends HTMLElement {
+    connectedCallback() {
+      const select = this.querySelector("select");
+      if (!select) return;
+      const filter = () => {
+        for (const item of this.querySelectorAll<HTMLElement>("[data-category]")) {
+          item.hidden = Boolean(select.value) && item.dataset.category !== select.value;
+        }
+      };
+      select.onchange = filter;
+      filter();
+    }
+  }
+  if (!customElements.get("project-document-timeline")) {
+    customElements.define("project-document-timeline", ProjectDocumentTimeline);
+  }
+</script>

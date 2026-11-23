@@ -1,6 +1,6 @@
 import { defineCollection, reference } from "astro:content";
 import type { CollectionConfig } from "astro/content/config";
-import { glob } from "astro/loaders";
+import { file, glob } from "astro/loaders";
 import { type ZodType, z } from "astro/zod";
 
 type PostData = {
@@ -63,7 +63,7 @@ type ProjectData = {
 
 type ContentCollection<T> = CollectionConfig<
 	ZodType<T>,
-	ReturnType<typeof glob>
+	ReturnType<typeof glob | typeof file>
 >;
 
 const postsCollection: ContentCollection<PostData> = defineCollection({
@@ -122,10 +122,10 @@ const dynamicCollection: ContentCollection<DynamicData> = defineCollection({
 });
 
 const projectsCollection: ContentCollection<ProjectData> = defineCollection({
-	loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content/projects" }),
+	loader: file("./src/config/projectsConfig.json"),
 	schema: z.object({
 		title: z.string(),
-		published: z.date(),
+		published: z.coerce.date(),
 		draft: z.boolean().optional().default(false),
 		order: z.number().optional(),
 		description: z.string().optional().default(""),
