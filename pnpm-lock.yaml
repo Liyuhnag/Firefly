@@ -215,6 +215,9 @@ importers:
       wrangler:
         specifier: ^4.127.1
         version: 4.127.1
+      yaml:
+        specifier: 2.9.0
+        version: 2.9.0
     devDependencies:
       '@astrojs/ts-plugin':
         specifier: ^1.10.11

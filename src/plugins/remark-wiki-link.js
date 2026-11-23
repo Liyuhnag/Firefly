@@ -10,6 +10,8 @@ import { slug } from "github-slugger";
 import matter from "gray-matter";
 import { getApiUrlList, processCoverImageSync } from "../utils/image-utils";
 
+import { readPostCategories } from "../utils/post-categories";
+
 const POSTS_DIR = fileURLToPath(new URL("../content/posts/", import.meta.url));
 const MARKDOWN_EXTENSION = /\.(?:md|mdx|markdown)$/i;
 const WIKI_LINK = /!?\[\[([^[\]\n]+)\]\]/g;
@@ -386,8 +388,7 @@ function createWikiLinkCard(parsed, context) {
 			? meta.data.description.trim()
 			: "";
 	const published = formatPublishedDate(meta.data.published);
-	const category =
-		typeof meta.data.category === "string" ? meta.data.category.trim() : "";
+	const category = readPostCategories().get(resolvedPath);
 	const tags = Array.isArray(meta.data.tags)
 		? meta.data.tags.filter((tag) => typeof tag === "string" && tag)
 		: [];

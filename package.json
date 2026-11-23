@@ -93,7 +93,8 @@
     "tsx": "^4.23.13",
     "typescript": "^6.0.3",
     "unist-util-visit": "^5.1.0",
-    "wrangler": "^4.127.1"
+    "wrangler": "^4.127.1",
+    "yaml": "2.9.0"
   },
   "devDependencies": {
     "@astrojs/ts-plugin": "^1.10.11",

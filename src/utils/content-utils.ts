@@ -3,7 +3,9 @@ import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import { getCategoryUrl } from "@utils/url-utils";
 
-// // Retrieve posts and sort them by publication date
+import { readPostCategories } from "./post-categories";
+
+// Retrieve posts and sort them by publication date
 async function getRawSortedPosts() {
 	const allBlogPosts = await getCollection("posts", ({ data }) => {
 		return import.meta.env.PROD ? data.draft !== true : true;
@@ -19,7 +21,11 @@ async function getRawSortedPosts() {
 		const dateB = new Date(b.data.published);
 		return dateA > dateB ? -1 : 1;
 	});
-	return sorted;
+	const categories = readPostCategories();
+	return sorted.map((post) => ({
+		...post,
+		data: { ...post.data, category: categories.get(post.id) ?? "" },
+	}));
 }
 
 export async function getSortedPosts(): Promise<CollectionEntry<"posts">[]> {
@@ -184,9 +190,7 @@ export type Category = {
 };
 
 export async function getCategoryList(): Promise<Category[]> {
-	const allBlogPosts = await getCollection<"posts">("posts", ({ data }) => {
-		return import.meta.env.PROD ? data.draft !== true : true;
-	});
+	const allBlogPosts = await getRawSortedPosts();
 	const count: { [key: string]: number } = {};
 	allBlogPosts.forEach((post: { data: { category: string | null } }) => {
 		if (!post.data.category) {
@@ -260,9 +264,7 @@ export async function getRelatedPosts(
 	currentPost: CollectionEntry<"posts">,
 	maxCount = 5,
 ): Promise<PostForList[]> {
-	const allPosts = await getCollection<"posts">("posts", ({ data }) => {
-		return import.meta.env.PROD ? data.draft !== true : true;
-	});
+	const allPosts = await getRawSortedPosts();
 
 	// 排除自身和加密文章
 	const candidates = allPosts.filter(

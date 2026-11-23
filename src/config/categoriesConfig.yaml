@@ -1,0 +1,25 @@
+# 分类名下列出文章 ID（文章的 slug，未设置时使用 Astro 生成的 ID）。
+MCP:
+  - mcp-de-ji-ben-gai-nian
+  - shen-ru-li-jie-mcp
+容器:
+  - container
+  - wei-shen-me-you-pod
+Harness:
+  - context-enginer
+  - harness-engineering
+智能体开发:
+  - intent-recognition
+  - interrupt
+mysql45讲:
+  - mysql-san-da-ri-zhi
+  - mysql-wei-shen-me-hui-xuan-cuo-suo-yin
+  - mysql-de-jia-gou
+Redis:
+  - redis-shu-ju-jie-gou
+建站记录:
+  - taibai-blog-deployment
+消息队列:
+  - task-redelivery-handling
+项目:
+  - shu-zi-yun-wei-zhu-shou
