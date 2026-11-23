@@ -76,8 +76,8 @@ export async function getSortedProjects(): Promise<
 		}
 
 		return (
-			b.data.published.getTime() - a.data.published.getTime() ||
-			a.data.title.localeCompare(b.data.title)
+			(b.data.published?.getTime() ?? -Infinity) - (a.data.published?.getTime() ?? -Infinity) ||
+			a.data.name.localeCompare(b.data.name)
 		);
 	});
 }

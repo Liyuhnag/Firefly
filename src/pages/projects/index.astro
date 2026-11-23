@@ -25,7 +25,7 @@ const description = i18n(I18nKey.projectsDescription);
 const projects = await getSortedProjects();
 const projectMeta = projects.map((p) => ({
 	id: removeFileExtension(p.id),
-	title: p.data.title,
+	title: p.data.name,
 	description: p.data.description,
 	image: p.data.image,
 	basePath: getFileDirFromPath(p.filePath || ""),

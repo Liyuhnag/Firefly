@@ -1,5 +1,6 @@
 ---
-import { type CollectionEntry, getEntry } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { getSortedProjects } from "@/utils/content-utils";
 import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
@@ -9,11 +10,14 @@ interface Props {
 	entry: CollectionEntry<"posts">;
 }
 const { entry } = Astro.props;
-const project = entry.data.project ? await getEntry(entry.data.project) : undefined;
-const showProject = project && siteConfig.pages.projects && (!import.meta.env.PROD || !project.data.draft);
-const sourceName = showProject ? project.data.title : entry.data.category?.trim() || i18n(I18nKey.uncategorized);
-const sourceUrl = showProject ? url(`/projects/${removeFileExtension(project.id)}/`) : getCategoryUrl(entry.data.category);
+const projects = siteConfig.pages.projects ? (await getSortedProjects()).filter(({ data }) =>
+	Object.values(data.pages).some((refs) => refs.some((ref) => ref.id === entry.id))
+) : [];
 ---
 <p class="text-sm text-50">
-  {showProject ? "来自项目" : "来自分类"} · <a href={sourceUrl} class="text-(--primary) hover:underline">{sourceName}</a>
+  {projects.length ? "来自项目" : "来自分类"} · {projects.length ? projects.map((project, index) => (
+    <>{index > 0 && "、"}<a href={url(`/projects/${removeFileExtension(project.id)}/`)} class="text-(--primary) hover:underline">{project.data.name}</a></>
+  )) : (
+    <a href={getCategoryUrl(entry.data.category)} class="text-(--primary) hover:underline">{entry.data.category?.trim() || i18n(I18nKey.uncategorized)}</a>
+  )}
 </p>

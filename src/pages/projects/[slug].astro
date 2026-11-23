@@ -1,11 +1,12 @@
 ---
+import { getEntry } from "astro:content";
 import { Icon } from "astro-icon/components";
 import CoverImage from "@/components/common/CoverImage.astro";
 import { siteConfig } from "@/config";
 import I18nKey from "@/i18n/i18nKey";
 import { i18n } from "@/i18n/translation";
 import MainGridLayout from "@/layouts/MainGridLayout.astro";
-import { getSortedPostsList, getSortedProjects } from "@/utils/content-utils";
+import { getSortedProjects } from "@/utils/content-utils";
 import { formatDateToYYYYMMDD } from "@/utils/date-utils";
 import {
 	getProjectStatusMeta,
@@ -35,7 +36,7 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 
-const { title, description, published, techStack, link, status } = entry.data;
+const { name: title, description, published, techStack, link, status } = entry.data;
 
 // OG 元数据用绝对 URL；页面内封面由 <CoverImage> 用原始 src + basePath 解析（同文章页）
 const coverOg = await resolveProjectImageAbsolute(
@@ -53,15 +54,21 @@ const coverBasePath = getFileDirFromPath(entry.filePath || "");
 // 状态元数据（标准 key → 本地化 + 配色）
 const statusMeta = status ? getProjectStatusMeta(status) : null;
 
-const documents = (await getSortedPostsList())
-	.filter((post) => post.data.project?.id === entry.id)
-	.sort((a, b) => b.data.published.getTime() - a.data.published.getTime())
-	.map(({ id, data }) => ({
-		href: getPostUrlBySlug(id),
-		title: data.title,
-		date: formatDateToYYYYMMDD(data.published),
-		category: data.category?.trim() || i18n(I18nKey.uncategorized),
-	}));
+const pageLinks = Object.entries(entry.data.pages).flatMap(([category, refs]) =>
+	refs.map((ref) => ({ category, ref })),
+);
+const resolved = await Promise.all(pageLinks.map(async ({ category, ref }) => {
+	const post = await getEntry(ref);
+	if (!post) throw new Error(`项目 ${entry.id} 的分类「${category}」引用了不存在的文章：${ref.id}`);
+	if (import.meta.env.PROD && post.data.draft) return null;
+	return {
+		href: getPostUrlBySlug(post.id),
+		title: post.data.title,
+		date: formatDateToYYYYMMDD(post.data.published),
+		category,
+	};
+}));
+const documents = resolved.filter((doc) => doc !== null).sort((a, b) => b.date.localeCompare(a.date));
 const categories = [...new Set(documents.map((doc) => doc.category))];
 ---
 
@@ -102,8 +109,7 @@ const categories = [...new Set(documents.map((doc) => doc.category))];
           )}
         </div>
 
-        <!-- 日期 + 标签-->
-        <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3">
+        {published && <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-3">
           <div class="flex items-center">
             <div class="meta-icon">
               <Icon name="material-symbols:calendar-today-outline-rounded" class="text-xl" />
@@ -113,7 +119,7 @@ const categories = [...new Set(documents.map((doc) => doc.category))];
             </time>
           </div>
 
-        </div>
+        </div>}
 
         <h2 class="mt-6 text-xl font-bold">项目简介</h2>
         {description && (

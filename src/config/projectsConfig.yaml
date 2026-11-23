@@ -1,0 +1,17 @@
+# 每个顶层键是项目 ID，也用于项目网址。pages 按分类列出文章 ID。
+taibai-blog:
+  name: taibai 个人博客
+  description: 用 Firefly 搭建个人博客，把文章、项目记录和开发复盘放在自己的域名下。
+  techStack: [Astro, Svelte, TypeScript, GitHub Pages]
+  pages:
+    建站记录:
+      - taibai-blog-deployment
+
+  published: 2026-11-23
+  status: published
+  tags: [Astro, GitHub Pages]
+  link:
+    - label: 访问博客
+      value: https://taibai.work/
+    - label: GitHub
+      value: https://github.com/Liyuhnag/Firefly

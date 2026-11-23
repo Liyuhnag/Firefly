@@ -2,7 +2,6 @@
 title: "taibai 博客上线记录：从仓库路径迁移到独立域名"
 published: 2026-11-23
 category: "建站记录"
-project: taibai-blog
 description: "记录域名切换时的部署路径调整、DNS 解析和 HTTPS 证书验证。"
 ---
 
