@@ -98,7 +98,7 @@ export const zh_CN: Translation = {
 
 	// 项目展示页
 	[Key.projects]: "项目",
-	[Key.projectsDescription]: "这里展示我开发过的项目",
+	[Key.projectsDescription]: "记录我做过的项目，以及开发中的取舍与复盘。",
 	[Key.projectDetails]: "查看详情",
 	[Key.projectBack]: "返回项目列表",
 	[Key.projectEmpty]: "暂无项目",
